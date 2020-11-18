@@ -118,7 +118,7 @@ const forgotPassword = async (req, res)=>{
        Please click <a href="${link}"> here </a> to change your passord.
        </p>
     </html>`
-        let transporter = nodemailer.createTransport({
+    let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
                 user: process.env.EMAIL,

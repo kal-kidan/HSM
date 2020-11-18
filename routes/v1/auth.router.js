@@ -176,7 +176,7 @@ router.post('/forgotpassword',authController.forgotPassword)
  *        - bearerAuth: []
  *      tags:
  *        - auth
- *      description: verify user email
+ *      description: reset password
  *      requestBody:
  *        content: 
  *          application/json:  
