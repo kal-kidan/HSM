@@ -1,0 +1,209 @@
+const express = require("express");
+const router = express.Router()
+const {hasPermission} = require('./../../middleware/permission-guard')
+const authController = require('./../../controllers/AuthController')
+ 
+const formValidator = require('./../../middleware/form-validator')
+/**
+ *  @swagger
+ * 
+ *  /v1/auth/register:
+ *    post:
+ *      tags:
+ *        - auth
+ *      description: user registration (user, admin)
+ *      consumes:
+ *        - application/json
+ *      requestBody:
+ *        content: 
+ *          application/json:  
+ *            schema:
+ *              type: object
+ *              properties:
+ *                firstName:
+ *                  type: string 
+ *                lastName:
+ *                  type: string
+ *                email:
+ *                  type: string 
+ *                phoneNumber:
+ *                  type: string 
+ *                password:
+ *                  type: string 
+ *                role:
+ *                  type: string 
+ *              example:
+ *                  firstName: "abebe"
+ *                  lastName: "kebede"
+ *                  email: "abebe@gmail.com"
+ *                  password: "password"
+ *                  phoneNumber: "+251942793296"
+ *                  role: "user"
+ *   
+ *      responses:
+ *        200:
+ *          description:  A JSON object containing user information
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  _id:
+ *                    type: string
+ *                  firstName:
+ *                    type: string
+ *                  lastName:
+ *                    type: string
+ *                  email:
+ *                    type: string
+ *                  phoneNumber:
+ *                    type: string
+ *        401: 
+ *          description: incorrect username or password 
+ *  
+ *     
+ */
+
+router.post('/register', hasPermission('register'), formValidator.validateRegistration, authController.register)
+
+
+/**
+ *  @swagger
+ * 
+ *  /v1/auth/login:
+ *    post:
+ *      tags:
+ *        - auth
+ *      description: login
+ *      consumes:
+ *        - application/json
+ *      requestBody:
+ *        content: 
+ *          application/json:  
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: string 
+ *                password:
+ *                  type: string
+ *              example:
+ *                email: abebe@gmail.com
+ *                pasword: abebe1             
+ *      responses:
+ *        200:
+ *          description:  A JSON object containing user information
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  _id:
+ *                    type: string
+ *                  firstName:
+ *                    type: string
+ *                  lastName:
+ *                    type: string
+ *                  email:
+ *                    type: string
+ *                  phoneNumber:
+ *                    type: string
+ *                example:
+ *                  _id: "5f8b08697e7d8b339c28e320"
+ *                  firstName: "abebe"
+ *                  lastName: "kebede"
+ *                  email: "abebe@gmail.com"
+ *                  phoneNumber: "+251942793296"
+ *                  role: "user"
+ *         
+ *        401: 
+ *          description: incorrect username or password 
+ *  
+ *     
+ */
+router.post('/login', authController.login)
+
+/**
+ *  @swagger
+ * 
+ *  /v1/auth/verify:
+ *    post:
+ *      security:
+ *        - bearerAuth: []
+ *      tags:
+ *        - auth
+ *      description: verify user email
+ *      requestBody:
+ *        content: 
+ *          application/json:  
+ *            schema:
+ *              type: object
+ *              properties:
+ *                token:
+ *                  type: string
+ *                  required: true 
+ *      responses:
+ *        200:
+ *          description: your email verified successfuly
+ *        400: 
+ *          description: invalid token
+ */
+router.post('/verify', hasPermission('verifyEmail'), authController.verifyEmail)
+
+/**
+ *  @swagger
+ * 
+ *  /v1/auth/forgotpassword:
+ *    post:
+ *      security:
+ *        - bearerAuth: []
+ *      tags:
+ *        - auth
+ *      description: verify user email
+ *      requestBody:
+ *        content: 
+ *          application/json:  
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: string
+ *                  required: true 
+ *      responses:
+ *        200:
+ *          description: email has been sent 
+ *        404: 
+ *          description: email not found
+ */
+router.post('/forgotpassword',authController.forgotPassword)
+
+/**
+ *  @swagger
+ * 
+ *  /v1/auth/resetpassword:
+ *    post:
+ *      security:
+ *        - bearerAuth: []
+ *      tags:
+ *        - auth
+ *      description: verify user email
+ *      requestBody:
+ *        content: 
+ *          application/json:  
+ *            schema:
+ *              type: object
+ *              properties:
+ *                token:
+ *                  type: string
+ *                  required: true 
+ *                password:
+ *                  type: string
+ *                  required: true 
+ *      responses:
+ *        200:
+ *          description: password reseted successfuly
+ *        404: 
+ *          description: invalid token or password
+ */
+router.post('/resetpassword',authController.resetPassword)
+module.exports = router
