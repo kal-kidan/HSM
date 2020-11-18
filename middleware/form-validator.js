@@ -19,6 +19,9 @@ const validateRegistration = async (req, res, next)=>{
       validationResult = await registerPatientSchema.validateAsync(req.body)
       next()
     }
+    else{
+      return res.json({error:true, msg: "role can only be either doctor or patient"})
+    }
       
     }
     catch (err) { 

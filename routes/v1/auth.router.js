@@ -11,6 +11,8 @@ const formValidator = require('./../../middleware/form-validator')
  *    post:
  *      tags:
  *        - auth
+ *      security:
+ *        - bearerAuth: []
  *      description: user registration (user, admin)
  *      consumes:
  *        - application/json
@@ -26,38 +28,51 @@ const formValidator = require('./../../middleware/form-validator')
  *                  type: string
  *                email:
  *                  type: string 
+ *                gender:
+ *                  type: string 
  *                phoneNumber:
  *                  type: string 
+ *                address:
+ *                  type: object
+ *                  properties:
+ *                    region:
+ *                      type: string  
+ *                    city:
+ *                      type: string 
+ *                    postalCode:
+ *                      type: string 
+ *                    street:
+ *                      type: string 
+ *                speciallity:
+ *                  type: string 
+ *                availaibleDate:
+ *                  type: array
+ *                  items:
+ *                    type: object
+ *                    properties:
+ *                      day:
+ *                        type: string   
+ *                      from:
+ *                        type: string   
+ *                      to:
+ *                        type: string 
+ *                bio:
+ *                  type: string 
+ *                education:
+ *                  type: array
+ *                  items:
+ *                    type: string     
+ *                experience:
+ *                  type: array
+ *                  items:
+ *                    type: string   
  *                password:
  *                  type: string 
  *                role:
- *                  type: string 
- *              example:
- *                  firstName: "abebe"
- *                  lastName: "kebede"
- *                  email: "abebe@gmail.com"
- *                  password: "password"
- *                  phoneNumber: "+251942793296"
- *                  role: "user"
- *   
+ *                  type: string    
  *      responses:
  *        200:
  *          description:  A JSON object containing user information
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  _id:
- *                    type: string
- *                  firstName:
- *                    type: string
- *                  lastName:
- *                    type: string
- *                  email:
- *                    type: string
- *                  phoneNumber:
- *                    type: string
  *        401: 
  *          description: incorrect username or password 
  *  
@@ -93,29 +108,6 @@ router.post('/register', hasPermission('register'), formValidator.validateRegist
  *      responses:
  *        200:
  *          description:  A JSON object containing user information
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  _id:
- *                    type: string
- *                  firstName:
- *                    type: string
- *                  lastName:
- *                    type: string
- *                  email:
- *                    type: string
- *                  phoneNumber:
- *                    type: string
- *                example:
- *                  _id: "5f8b08697e7d8b339c28e320"
- *                  firstName: "abebe"
- *                  lastName: "kebede"
- *                  email: "abebe@gmail.com"
- *                  phoneNumber: "+251942793296"
- *                  role: "user"
- *         
  *        401: 
  *          description: incorrect username or password 
  *  
@@ -155,8 +147,6 @@ router.post('/verify', hasPermission('verifyEmail'), authController.verifyEmail)
  * 
  *  /v1/auth/forgotpassword:
  *    post:
- *      security:
- *        - bearerAuth: []
  *      tags:
  *        - auth
  *      description: verify user email

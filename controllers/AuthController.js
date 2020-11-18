@@ -13,18 +13,14 @@ const register = async (req, res) => {
     
     try {
         let {body} = req
-        let newUser = new user(
-            body
-        )
-        let createdUser = await newUser.save()
-        const emailToken = await jwt.sign({email: createdUser.email}, process.env.EMAIL_KEY); 
+        const emailToken = await jwt.sign({email: body.email}, process.env.EMAIL_KEY); 
         let subject = "From Cv Compiler: Here is your verifcation Link."
         let link =`${process.env.URL_FRONT}/auth/verify/${emailToken}`
         let message = `<html> 
         <p> Thank you for registering! Click the link below to verify your email, and we'll help you get started.
         click the <a href="${link}"> here </a> to verify your account. </P>
         </html>`
-        let email = createdUser.email
+        let email = body.email
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -42,6 +38,10 @@ const register = async (req, res) => {
         }
         try {
             await transporter.sendMail(mailOptions)
+            let newUser = new user(
+                body
+            )
+            await newUser.save()
             return res.json({status:true, msg:"you have successfuly signed up check your email to verify"})
    
            
@@ -134,15 +134,8 @@ const forgotPassword = async (req, res)=>{
             html: `${message}`
         }
         
-        await transporter.sendMail(mailOptions, function(error, info){
-            if(error){ 
-                return res.status(500).json( { status:false, error: true,  msg: error.message})
-            }
-            else{
-                
-                return res.json({status:true, msg:"verification email has been sent, please check your email"})
-            }
-        })
+        await transporter.sendMail(mailOptions)
+        return res.json({status:true, msg:"verification email has been sent, please check your email"})
    } catch (error) {
         return res.status(500).json( { status:false, error: true,  msg: error.message})
    }
