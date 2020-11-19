@@ -1,5 +1,5 @@
 const {appointment} = require('./../model/appointment')
-const makeAppointment = (req, res)=>{
+const makeAppointment = async (req, res)=>{
     try { 
         let newAppointment = new appointment(
             req.body

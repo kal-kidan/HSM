@@ -33,7 +33,7 @@ const validateRegistration = async (req, res, next)=>{
 
 
 const validateAppointment= async (req, res, next)=>{
-  if(Object.entries(req.body).length=== 0){ 
+  if(Object.entries(req.body).length === 0){ 
     return res.json({error:true, msg: "please enter a value"})
   }
   
@@ -49,5 +49,6 @@ const validateAppointment= async (req, res, next)=>{
 }
 
 module.exports = {
-  validateRegistration 
+  validateRegistration,
+  validateAppointment
 }
