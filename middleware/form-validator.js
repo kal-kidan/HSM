@@ -1,7 +1,6 @@
 const validationSchema = require('./../lib/validation-schemas')
 const {registerDoctorSchema} = validationSchema
 const {registerPatientSchema} = validationSchema
-
 const Joi = require('joi')
 
 const validateRegistration = async (req, res, next)=>{
@@ -30,7 +29,9 @@ const validateRegistration = async (req, res, next)=>{
        
 }
 
+
  
+
 module.exports = {
-  validateRegistration
+  validateRegistration 
 }

@@ -105,6 +105,10 @@ const userSchema = mongoose.Schema(
             type: String,
             index: true,
             maxlength: 10
+           },
+           isBooked:{
+               type: Boolean,
+               default: false
            }
         }
         ],

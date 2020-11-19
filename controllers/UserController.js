@@ -1,8 +1,9 @@
-const multer = require("multer");
-const path = require("path"); 
+const multer = require("multer")
+const path = require("path")
 const fs = require('fs')
-const User = require('./../model/user')
+const User = require('./../model/user').user
 const helper = require("./helper")
+ 
  
 const uploadImage = async (req, res) => {
     const storage = multer.diskStorage({
@@ -50,6 +51,45 @@ const uploadImage = async (req, res) => {
     
   }
 
+  const getDoctorById = async (req, res)=>{
+   
+     try {
+      const {_id} = req.params
+      let user = await User.findById(_id)
+      if(!user || user.role!=="doctor"){
+          return res.status(404).json({error: true, msg: `we couldn't find a doctor with id ${_id}`})
+      }
+      user = user.toObject()
+      user.address = ''
+      delete user.active; delete user.status ;delete user.role; delete user.verified;
+      delete user.createdAt; delete user.updatedAt; delete user.address
+      return res.send(user)
+
+     } catch (error) {
+       res.status(400).json({error: true, msg: error.message})
+     }
+  }
+
+  const searchDoctor = async (req, res)=>{
+    const escapeStringRegexp = require('escape-string-regexp');
+    try {
+     let {speciallity} = req.query
+     speciallity = escapeStringRegexp(speciallity)
+     let exp = new RegExp(`${speciallity}`, "i")
+     let user = await User.find({speciallity: {$regex: exp}}) 
+     if(user.length==0){
+         return res.status(404).json({error: true, msg: `we couldn't find a doctor with speciallity ${speciallity}`})
+     }
+     return res.send(user)
+
+    } catch (error) {
+      res.status(400).json({error: true, msg: error.message})
+    }
+ }
+
+
   module.exports = {
-      uploadImage
+      uploadImage,
+      getDoctorById,
+      searchDoctor
   }

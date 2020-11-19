@@ -20,7 +20,7 @@ const UserController = require('./../../controllers/UserController')
  *               profileImage:
  *                 type: file
  *                 required: true
- *     response:
+ *     responses:
  *       200: 
  *         description: successfuly uploaded message      
  *       400: 
@@ -29,4 +29,7 @@ const UserController = require('./../../controllers/UserController')
  */
 router.patch('/profile-image', UserController.uploadImage)
 
+
+router.get('/doctor/find/:_id', UserController.getDoctorById)
+router.get('/doctor/search', UserController.searchDoctor)
 module.exports = router
