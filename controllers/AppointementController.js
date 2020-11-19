@@ -1,6 +1,8 @@
 const {appointment} = require('./../model/appointment')
 const makeAppointment = async (req, res)=>{
     try { 
+        let appointmentObj = req.body
+        appointmentObj.patient = req.user._id
         let newAppointment = new appointment(
             req.body
         )

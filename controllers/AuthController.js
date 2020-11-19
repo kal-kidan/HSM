@@ -1,18 +1,13 @@
 const {user} = require('./../model/user')  
-const { validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken'); 
 const nodemailer = require('nodemailer')
 const bcrypt = require('bcryptjs');
-const {hasPermission} = require('./../middleware/permission-guard')
+ 
 
 const register = async (req, res) => {
-    const errors = validationResult(req)
-    if(!errors.isEmpty()){
-        return res.status(400).json(errors) 
-    }
     
     try {
-        let {body} = req
+        let body = req.body
         const emailToken = await jwt.sign({email: body.email}, process.env.EMAIL_KEY); 
         let subject = "From Cv Compiler: Here is your verifcation Link."
         let link =`${process.env.URL_FRONT}/auth/verify/${emailToken}`
@@ -20,6 +15,7 @@ const register = async (req, res) => {
         <p> Thank you for registering! Click the link below to verify your email, and we'll help you get started.
         click the <a href="${link}"> here </a> to verify your account. </P>
         </html>`
+        try {
         let email = body.email
         let transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -27,7 +23,7 @@ const register = async (req, res) => {
                 user: process.env.EMAIL,
                 pass: process.env.PASS
             },
-            connectionTimeout: 60000
+            connectionTimeout: 90000
         })
         
         const mailOptions = {
@@ -36,14 +32,13 @@ const register = async (req, res) => {
             subject: `${subject}`,
             html: `${message}`
         }
-        try {
-            await transporter.sendMail(mailOptions)
             let newUser = new user(
                 body
             )
+            await transporter.sendMail(mailOptions)
             await newUser.save()
             return res.json({status:true, msg:"you have successfuly signed up check your email to verify"})
-   
+            
            
         } catch (error) {
             return res.status(500).json( { status:false, error: true,  msg: error.message})
@@ -171,11 +166,6 @@ const resetPassword = async (req, res)=>{
 }
 
 const login = async (req, res)=>{ 
-    const errors = validationResult(req)
-    if(!errors.isEmpty()){
-        return res.status(400).json(errors) 
-    }
-    
     try {
        let User = await user.findByCredentials(req.body.email, req.body.password) 
         let errors={msg:''}

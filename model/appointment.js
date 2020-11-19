@@ -31,7 +31,7 @@ const appointmentSchema =  mongoose.Schema({
         default: 'pending' 
     }
 },
-{timestamp: true}
+{timestamps: true}
 )
 
 const appointment = mongoose.model('appointments', appointmentSchema)

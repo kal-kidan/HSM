@@ -30,7 +30,10 @@ const auth = async (req, res, next) => {
         next()
     } catch (errors) {
         errors.msg = "you are not authorized"
-        res.status(401).send({errors})
+        res.status(401).send({error:{
+            error: true,
+            msg: "please authenticate first"
+        }})
     
     }
    
