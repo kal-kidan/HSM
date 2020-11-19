@@ -22,12 +22,13 @@ const appointmentSchema =  mongoose.Schema({
     ],
     symptoms: [
         {
-            type: String
+            type: String,
+            maxlength: 300
         }
     ],
     status:{
         type: String,
-        default: 'pending'
+        default: 'pending' 
     }
 },
 {timestamp: true}

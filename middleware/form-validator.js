@@ -1,6 +1,8 @@
 const validationSchema = require('./../lib/validation-schemas')
 const {registerDoctorSchema} = validationSchema
 const {registerPatientSchema} = validationSchema
+const {appointmentSchema} = validationSchema
+
 const Joi = require('joi')
 
 const validateRegistration = async (req, res, next)=>{
@@ -30,7 +32,21 @@ const validateRegistration = async (req, res, next)=>{
 }
 
 
- 
+const validateAppointment= async (req, res, next)=>{
+  if(Object.entries(req.body).length=== 0){ 
+    return res.json({error:true, msg: "please enter a value"})
+  }
+  
+  let validationResult;
+  try {
+    validationResult = await appointmentSchema.validateAsync(req.body)
+    next()
+    }
+    catch (err) { 
+      return res.json({error: true, message: err.message})
+    }
+       
+}
 
 module.exports = {
   validateRegistration 

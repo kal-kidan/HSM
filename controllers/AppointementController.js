@@ -12,3 +12,7 @@ const makeAppointment = (req, res)=>{
         return res.status(500).json( { status:false, error: true,  msg: error.message})
     }
 }
+
+module.exports = {
+    makeAppointment
+}
