@@ -1,19 +1,42 @@
 const mongoose = require('./../lib/db-connect')
-
+const {user} = require('./user')
 const appointmentSchema =  mongoose.Schema({
     doctor: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'users'
+        ref: 'user',
+        async validate(value){
+            let existingUser =  await user.findOne({_id: value, role: 'doctor'})
+            if(!existingUser){
+                throw new Error("please enter valid doctor id");
+            }
+        }
     },
     patient: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'users'
+        ref: 'user',
+        async validate(value){
+            let existingUser =  await user.findOne({_id: value, role: 'patient'})
+            if(!existingUser){
+                throw new Error("please enter valid patient id");
+            }
+        }
     },
     date:{
         type: mongoose.Schema.Types.ObjectId,
-        required: true 
+        required: true,
+        async validate(value){
+            let existingUser =  await user.findOne({'availaibleDate._id': value})
+            if(!existingUser || existingUser.booked==true){
+                throw new Error("please enter valid date id");
+            }
+            let availaibleDate = existingUser.availaibleDate.id(value)
+            if(availaibleDate.booked==true){
+                throw new Error("this schedule is already booked");
+            }
+           
+        }
     },
     files: [
         {
@@ -34,5 +57,5 @@ const appointmentSchema =  mongoose.Schema({
 {timestamps: true}
 )
 
-const appointment = mongoose.model('appointments', appointmentSchema)
+const appointment = mongoose.model('appointment', appointmentSchema)
 module.exports = {appointment}

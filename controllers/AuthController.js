@@ -8,6 +8,10 @@ const register = async (req, res) => {
     
     try {
         let body = req.body
+        let existedUser = await user.findOne({email: body.email})
+        if(existedUser){
+            return  res.status(400).json({error: true, msg: 'this email has been taken'})
+        }
         const emailToken = await jwt.sign({email: body.email}, process.env.EMAIL_KEY); 
         let subject = "From Cv Compiler: Here is your verifcation Link."
         let link =`${process.env.URL_FRONT}/auth/verify/${emailToken}`
@@ -41,28 +45,11 @@ const register = async (req, res) => {
             
            
         } catch (error) {
-            return res.status(500).json( { status:false, error: true,  msg: error.message})
+            return res.status(400).json( { status:false, error: true,  msg: error.message})
         }
        
     } catch (error) {    
-        if(error.keyValue){
-            if(error.keyValue.email){   
-                let emailError  = {}
-                let errorArray = {errors:[]}
-                emailError.msg = 'this email has been taken'
-                emailError.param = 'email'
-                emailError.value = req.body.email
-                emailError.location = 'body'
-                errorArray.errors.push(emailError)
-                res.status(400).json(errorArray)
-            }
-            else{
-                return res.status(500).json( { status:false, error: true,  msg: error.message})
-            }
-        }
-        else{
-            res.status(500).json({errors:{msg : error.message}})
-        }       
+            res.status(400).json({errors:{msg : error.message}})
         }
 }
 

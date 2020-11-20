@@ -166,6 +166,14 @@ userSchema.methods.getAuthToken = async function (){
  userSchema.methods.toJSON = function(){
     const user = this
     userObject = user.toObject()
+    if(user.role == "admin" || user.role == "patient"){
+        userObject.education = ''
+        userObject.experience = ''
+        userObject.availaibleDate = ''
+        delete  userObject.education; delete userObject.experience;
+        delete userObject.availaibleDate; delete userObject.speciallity
+    }
+    
     delete userObject.password
     delete userObject.verified
     return userObject 
@@ -202,6 +210,6 @@ userSchema.pre('save', async function(next){
 
  
 
-const user = mongoose.model('users',userSchema);
+const user = mongoose.model('user',userSchema);
 
 module.exports = {user};

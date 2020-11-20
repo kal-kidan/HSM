@@ -20,7 +20,7 @@ const uploadImage = async (req, res) => {
   
     upload(req, res, async function(err) {
      if(err){
-         res.json({
+         res.status(400).json({
              error: true,
              msg: err.message
          })
@@ -36,7 +36,7 @@ const uploadImage = async (req, res) => {
               let filePath = path.join(__dirname, '..', 'uploads', 'images', name)
               fs.unlink(filePath, (err)=>{
                 if (err) {
-                  return res.json({error: true, msg: err.message})
+                  return res.status(500).json({error: true, msg: err.message})
                 }
               })
             }
@@ -52,7 +52,6 @@ const uploadImage = async (req, res) => {
   }
 
   const getDoctorById = async (req, res)=>{
-   
      try {
       const {_id} = req.params
       let user = await User.findById(_id)
@@ -63,7 +62,7 @@ const uploadImage = async (req, res) => {
       user.address = ''
       delete user.active; delete user.status ;delete user.role; delete user.verified;
       delete user.createdAt; delete user.updatedAt; delete user.address
-      return res.send(user)
+      return res.json(user)
 
      } catch (error) {
        res.status(400).json({error: true, msg: error.message})
@@ -80,7 +79,7 @@ const uploadImage = async (req, res) => {
      if(user.length==0){
          return res.status(404).json({error: true, msg: `we couldn't find a doctor with speciallity ${speciallity}`})
      }
-     return res.send(user)
+     return res.json(user)
 
     } catch (error) {
       res.status(400).json({error: true, msg: error.message})
