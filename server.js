@@ -10,6 +10,7 @@ const swaggerUI = require('swagger-ui-express')
 const cors = require('cors');
 const bodyParser = require('body-parser')
 const unless = require('express-unless');
+const ejs = require('ejs')
 const app = express(); 
 
 
@@ -80,8 +81,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/uploads', express.static(__dirname + "/uploads"))
+app.set('view engine', 'ejs')
 
- app.use(auth.unless({ path:['/v1/auth/login', '/v1/auth/forgotpassword', '/v1/auth/resetpassword', '/v1/common/migrate'] }))
+ app.use(auth.unless({ path:['/v1/auth/login', '/v1/auth/forgotpassword', '/v1/auth/resetpassword', '/v1/common/migrate', '/v1/common/notification'] }))
 
  app.use('/v1', v1Router)
 

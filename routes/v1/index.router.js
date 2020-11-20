@@ -37,4 +37,7 @@ router.get('/user/me', IndexController.me)
  *          description: data migrated successfuly
  */
 router.post('/migrate', MigrationController.migrate)
+router.get('/notification',  (req, res)=>{
+    res.render('index')
+})
 module.exports = router

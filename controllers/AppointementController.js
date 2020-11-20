@@ -1,6 +1,8 @@
+const multer = require('multer')
+const fetch = require('node-fetch')
+
 const {appointment} = require('./../model/appointment')
 const {user} = require('./../model/user')
-const multer = require('multer')
 const helper = require('./helper')
 const makeAppointment = async (req, res)=>{
     try { 
@@ -77,6 +79,38 @@ const getAllDoctorAppointments = async (req, res)=>{
        }
     });
  }
+
+ const sendNotification = async (req, res)=>{
+    try { 
+    let notification = {
+        'title': 'you have made an appointment',
+        'text': 'appointment object'
+
+    }
+
+    let fcm_tokens = []
+    let notification_body = {
+        'notification': notification,
+        'registration_ids': fcm_tokens
+    }
+     fetch('https://fcm.googleapis.com/fcm/send', {
+         'methods': 'POST',
+         'headers': {
+             'Authorization': 'key='+
+              'AAAA1zF7E3M:APA91bEz6IBoDCCtf8Tl8goXkrlsuxqHuNrLo0EamLKqPd1ig0FkX-8POmG9zfvH8PqdPzW9jorCL7N3d0hqljyo_TFXhnHDY6qP5WQzKhHH6Of21xDlKl0sS_zNA1M5LsPkAImZKMIP',
+             'Content-Type': 'application/json'
+         },
+          'body': JSON.stringify(notification_body)
+     }).then(()=>{
+         return res.json({status: true, msg: "notification sent successfuly"})
+     }).catch((err)=>{
+        return res.status(500).json({status: true, msg: err.message})
+     })
+    } catch (error) {
+      res.status(400).json({error: true, msg: error.message})
+    }
+ }
+
 module.exports = {
     makeAppointment,
     getAllDoctorAppointments,
