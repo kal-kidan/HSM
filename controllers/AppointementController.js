@@ -85,7 +85,6 @@ const getAllDoctorAppointments = async (req, res)=>{
     let notification = {
         'title': 'you have made an appointment',
         'text': 'appointment object'
-
     }
 
     let fcm_tokens = []
@@ -110,7 +109,8 @@ const getAllDoctorAppointments = async (req, res)=>{
       res.status(400).json({error: true, msg: error.message})
     }
  }
-
+const stripe = require('stripe')(process.env.STRIPE_API_KEY)
+ 
 module.exports = {
     makeAppointment,
     getAllDoctorAppointments,
