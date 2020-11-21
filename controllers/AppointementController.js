@@ -4,6 +4,7 @@ const fetch = require('node-fetch')
 const {appointment} = require('./../model/appointment')
 const {user} = require('./../model/user')
 const helper = require('./helper')
+let appointmentFee = "2000"
 const makeAppointment = async (req, res)=>{
     try { 
         let appointmentObj = req.body

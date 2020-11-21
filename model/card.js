@@ -19,19 +19,19 @@ const cardtSchema =  mongoose.Schema({
           requied: true
         },
     number: {
-        type: Integer,
+        type: Number,
         requied: true
     },
     exp_month: {
-        type: Integer,
+        type: Number,
         requied: true
     },
     exp_year: {
-        type: Integer,
+        type: Number,
         requied: true
     },
     cvc: {
-        type: Integer,
+        type: String,
         requied: true
     } 
     
